@@ -1,4 +1,4 @@
-pattern
+suz-lab-cloudformation > pattern
 ========
 
 [suz-lab_0101_simple](https://github.com/suz-lab/suz-lab-cloudformation/blob/master/pattern/suz-lab_0101_simple.md)
@@ -14,5 +14,13 @@ aaa
 aaa
 
 [suz-lab_0202-hanat_firewall](https://github.com/suz-lab/suz-lab-cloudformation/blob/master/pattern/suz-lab_0202_hanat_firewall.md)
+--------
+aaa
+
+[suz-lab_0301-admin](https://github.com/suz-lab/suz-lab-cloudformation/blob/master/pattern/suz-lab_0202_hanat_firewall.md)
+--------
+aaa
+
+[suz-lab_0302-admin_firewall](https://github.com/suz-lab/suz-lab-cloudformation/blob/master/pattern/suz-lab_0202_hanat_firewall.md)
 --------
 aaa
