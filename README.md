@@ -1,10 +1,11 @@
 suz-lab-cloudformation
 ========
+aaa
 
-Pattern
+[pattern](https://github.com/suz-lab/suz-lab-cloudformation/tree/master/pattern)
 --------
+* [suz-lab_0101_simple](https://github.com/suz-lab/suz-lab-cloudformation/blob/master/pattern/suz-lab_0101_simple.md) 
 
-[suz-lab_0101_simple](https://github.com/suz-lab/suz-lab-cloudformation/blob/master/pattern/suz-lab_0101_simple.md) 
-
-Component
+[component](https://github.com/suz-lab/suz-lab-cloudformation/tree/master/component)
 --------
+aaa
