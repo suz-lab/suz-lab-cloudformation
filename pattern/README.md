@@ -1,4 +1,4 @@
-pattern < [suz-lab-cloudformation](https://github.com/suz-lab/suz-lab-cloudformation)
+pattern
 ========
 aaa
 
