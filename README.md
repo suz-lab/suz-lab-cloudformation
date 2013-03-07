@@ -1,11 +1,16 @@
-suz-lab-cloudformation
-======================
+suz-lab-centos-ami/share/cloudfromation/
+========
 
-suz-lab-cloudformation
+いろいろCloudFormationのテンプレートを作ってきたけど、
+作ったテンプレートは、結果、「リソース型」「統合型」「ラッパー型」
+に別れてしまった。
 
+* リソース型
+> EC2などを作成(まあ最初はこのようなテンプレート作りますよね)
 
-![0101_VPC](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-3BDFA.png)
+* 統合型
+> リソース型を複数重ね合わせる(AWS::CloudFormation::Stackのみ)
 
-![0201_VPC](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-6D3AE.png)
+* ラッパー型
+> リソース型/統合型のパラメータを指定(入力パラメータ数を減らす)
 
-![0301_VPC](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-9C31A.png)
