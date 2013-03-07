@@ -206,7 +206,7 @@
         }, 
 	"EC2SubnetPublicFix1": {
             "Properties": {
-                "AvailabilityZone": { "Fn::Join": [ "", [ { "Ref": "AWS::Region" }, { "Ref": "Az2" }  ] ] }, 
+                "AvailabilityZone": { "Fn::Join": [ "", [ { "Ref": "AWS::Region" }, { "Ref": "Az1" }  ] ] }, 
                 "CidrBlock": { "Ref": "SubnetPublicFix1CidrIp" },
                 "VpcId": { "Ref": "EC2VPCBase" }
             }, 
@@ -222,7 +222,7 @@
         }, 
 	"EC2SubnetProtectedVar1": {
             "Properties": {
-                "AvailabilityZone": { "Fn::Join": [ "", [ { "Ref": "AWS::Region" }, { "Ref": "Az2" }  ] ] }, 
+                "AvailabilityZone": { "Fn::Join": [ "", [ { "Ref": "AWS::Region" }, { "Ref": "Az1" }  ] ] }, 
                 "CidrBlock": { "Ref": "SubnetProtectedVar1CidrIp" },
                 "VpcId": { "Ref": "EC2VPCBase" }
             }, 
@@ -238,7 +238,7 @@
         }, 
         "EC2SubnetProtectedFix1": {
             "Properties": {
-                "AvailabilityZone": { "Fn::Join": [ "", [ { "Ref": "AWS::Region" }, { "Ref": "Az2" }  ] ] }, 
+                "AvailabilityZone": { "Fn::Join": [ "", [ { "Ref": "AWS::Region" }, { "Ref": "Az1" }  ] ] }, 
                 "CidrBlock": { "Ref": "SubnetProtectedFix1CidrIp" },
                 "VpcId": { "Ref": "EC2VPCBase" }
             }, 
@@ -254,7 +254,7 @@
         }, 
         "EC2SubnetPrivateVar1": {
             "Properties": {
-                "AvailabilityZone": { "Fn::Join": [ "", [ { "Ref": "AWS::Region" }, { "Ref": "Az2" }  ] ] }, 
+                "AvailabilityZone": { "Fn::Join": [ "", [ { "Ref": "AWS::Region" }, { "Ref": "Az1" }  ] ] }, 
                 "CidrBlock": { "Ref": "SubnetPrivateVar1CidrIp" },
                 "VpcId": { "Ref": "EC2VPCBase" }
             }, 
@@ -270,7 +270,7 @@
         }, 
 	"EC2SubnetPrivateFix1": {
             "Properties": {
-                "AvailabilityZone": { "Fn::Join": [ "", [ { "Ref": "AWS::Region" }, { "Ref": "Az2" }  ] ] }, 
+                "AvailabilityZone": { "Fn::Join": [ "", [ { "Ref": "AWS::Region" }, { "Ref": "Az1" }  ] ] }, 
                 "CidrBlock": { "Ref": "SubnetPrivateFix1CidrIp" },
                 "VpcId": { "Ref": "EC2VPCBase" }
             }, 
