@@ -5,7 +5,7 @@ pattern
 --------
 aaa
 
-[suz-lab_0102_simple_firewall](https://github.com/suz-lab/suz-lab-cloudformation/blob/master/pattern/suz-lab_0102_simple-firewall.md)
+[suz-lab_0102_simple_firewall](https://github.com/suz-lab/suz-lab-cloudformation/blob/master/pattern/suz-lab_0102_simple_firewall.md)
 --------
 aaa
 
@@ -13,6 +13,6 @@ aaa
 --------
 aaa
 
-[suz-lab_0202-hanat_firewall](https://github.com/suz-lab/suz-lab-cloudformation/blob/master/pattern/suz-lab_0202_hanat-firewall.md)
+[suz-lab_0202-hanat_firewall](https://github.com/suz-lab/suz-lab-cloudformation/blob/master/pattern/suz-lab_0202_hanat_firewall.md)
 --------
 aaa
