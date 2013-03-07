@@ -9,3 +9,12 @@ VPC構成
 セキュリティグループ構成
 --------
 ![0101_SG](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-3E692.png)
+
+VPC構成
+--------
+![0101_VPC](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-86610.png)
+
+
+セキュリティグループ構成
+--------
+![0101_SG](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-20408.png)
