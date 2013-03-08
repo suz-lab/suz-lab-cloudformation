@@ -1,4 +1,4 @@
-suz-lab_0102_simple-firewall
+suz-lab_0102_simple_firewall
 ========
 
 VPC構成
