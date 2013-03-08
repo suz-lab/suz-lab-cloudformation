@@ -1,22 +1,22 @@
-suz-lab_0301_simple
+suz-lab_0202_hanat_firewall
 ========
 
 VPC構成
 --------
-![0101_VPC](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-9C31A.png)
+![0101_VPC](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-08C3B.png)
 
 セキュリティグループ構成
 --------
-![0101_SG](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-2B9AC.png)
-![0101_SG](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-8249E.png)
+![0101_SG](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-99C7B.png)
+![0101_SG](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-7A316.png)
 
 VPC構成
 --------
-![0101_VPC](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-73BF4.png)
+![0101_VPC](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-95ECD.png)
 
 セキュリティグループ構成
 --------
-![0101_SG](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-1D61D.png)
-![0101_SG](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-A7E0C.png)
+![0101_SG](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-75C21.png)
+![0101_SG](https://cacoo.com/diagrams/c9AfWIgKpSO15Sy7-43958.png)
 
 
