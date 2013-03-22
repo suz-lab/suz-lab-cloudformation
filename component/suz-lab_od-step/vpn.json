@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09", 
-    "Description": "SUZ-LAB Formation OnDemand Step Console", 
+    "Description": "SUZ-LAB Formation OnDemand Step VPN", 
     "Mappings": {
         "AvailabilityZoneMap": {
             "ap-northeast-1": {
@@ -84,6 +84,8 @@
                     ".amazonaws.com/cloudformation/component/suz-lab_od-step/simple/0.0.5.json"
                 ] ] },
                 "Parameters": {
+                    "Type"                        : "vpn",
+                    "SourceDestCheck"             : "false",
                     "Name"                        : { "Ref": "Name" },
                     "InstanceType"                : { "Ref": "InstanceType" },
                     "KeyName"                     : { "Ref": "KeyName" },
@@ -98,61 +100,14 @@
                 } 
             }
         },
-        "Ec2SecurityGroupIngressOpStepSquidSource": {
+        "Ec2SecurityGroupIngressOpStepOpenVpnSource": {
             "Type"      : "AWS::EC2::SecurityGroupIngress",
             "Properties": {
                 "GroupId"                   : { "Fn::GetAtt": [ "OdStepSimple", "Outputs.SecurityGroupIdOpStep" ] },
-                "IpProtocol"                : "6",
-                "FromPort"                  : "3128",
-                "ToPort"                    : "3128",
-                "CidrIp"                    : { "Ref": "SourceCidrIp" }
-            }
-        },
-        "Ec2SecurityGroupEgressOpStepHttpInternet": {
-            "Type"      : "AWS::EC2::SecurityGroupEgress",
-            "Properties": {
-                "GroupId"                   : { "Fn::GetAtt": [ "OdStepSimple", "Outputs.SecurityGroupIdOpStep" ] },
-                "IpProtocol"                : "6",
-                "FromPort"                  : "80",
-                "ToPort"                    : "80",
+                "IpProtocol"                : "17",
+                "FromPort"                  : "1194",
+                "ToPort"                    : "1194",
                 "CidrIp"                    : "0.0.0.0/0"
-            }   
-        },      
-        "Ec2SecurityGroupEgressOpStepHttpsInternet": {
-            "Type"      : "AWS::EC2::SecurityGroupEgress",
-            "Properties": {
-                "GroupId"                   : { "Fn::GetAtt": [ "OdStepSimple", "Outputs.SecurityGroupIdOpStep" ] },
-                "IpProtocol"                : "6",
-                "FromPort"                  : "443",
-                "ToPort"                    : "443",
-                "CidrIp"                    : "0.0.0.0/0"
-            }   
-        },   
-        "Proxy" : {
-            "Type"       : "AWS::IAM::Group",
-            "Properties" : {
-                "Path"     : "/",
-                "Policies" : [ {
-                    "PolicyName"     : { "Ref": "PolicyNameProxy" },
-                    "PolicyDocument" : {
-                        "Statement"      : [ {
-                            "Effect"   : "Allow",
-                            "Action"   : "*",
-                            "Resource" : "*",
-                            "Condition": {
-                                "IpAddress": { "aws:SourceIp": { "Fn::GetAtt": [ "OdStepSimple", "Outputs.PublicIpAddressStep" ] } }
-                            }
-                        } ]
-                    }
-                } ]
-            }
-        },
-        "Work" : {
-            "Type"      : "AWS::IAM::User",
-            "Properties": {
-                "Path"         : "/",
-                "Groups"       : [ { "Ref": "Proxy" } ],
-                "LoginProfile" : { "Password" : { "Ref": "AWS::StackName"} }
             }
         }
     },

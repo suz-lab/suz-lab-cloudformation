@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09", 
-    "Description": "SUZ-LAB Formation OnDemand Step Simple", 
+    "Description": "SUZ-LAB Formation Operational Admin LDAP", 
     "Mappings": {
         "AvailabilityZoneMap": {
             "ap-northeast-1": {
@@ -21,7 +21,7 @@
             "Description": "Image ID", 
             "Type"       : "String"
         }, 
-	"InstanceType": {
+        "InstanceType": {
             "Default"    : "t1.micro", 
             "Description": "Instance Type", 
             "Type"       : "String"
@@ -71,7 +71,7 @@
             "Description": "Private IP Address",
             "Type"       : "String"
         },
-	"IamInstanceProfile": {
+        "IamInstanceProfile": {
             "Default"    : "", 
             "Description": "IAM Instance Profile", 
             "Type"       : "String"
@@ -84,23 +84,37 @@
     }, 
     "Resources": {
         "OpAdmin": {
-            "Type"      : "AWS::EC2::SecurityGroup",
+            "Type": "AWS::CloudFormation::Stack",
             "Properties": {
-                "GroupDescription": "op-admin",
-                "VpcId"           : { "Ref": "VpcId" }
-            }
-        },
-        "OpAdminLb": {
-            "Type"      : "AWS::EC2::SecurityGroup",
-            "Properties": {
-                "GroupDescription": "op-admin-lb",
-                "VpcId"           : { "Ref": "VpcId" }
+                "TemplateURL": { "Fn::Join": [ "", [
+                    "http://",
+                    { "Ref" : "AWS::Region" },
+                    ".cloudformation.suz-lab.com.s3-",
+                    { "Ref" : "AWS::Region" },
+                    ".amazonaws.com/cloudformation/component/suz-lab_op-admin/simple/0.0.1.json"
+                ] ] },
+                "Parameters": {
+                    "Name"                        : "op-admin",
+                    "InstanceType"                : "t1.micro",
+                    "ImageId"                     : { "Ref": "ImageId" },
+                    "KeyName"                     : { "Ref": "KeyName" },
+                    "SourceCidrIp"                : { "Ref": "SourceCidrIp" },
+                    "PrivateIpAddress"            : { "Ref": "PrivateIpAddress" },
+                    "VpcId"                       : { "Ref": "VpcId" },
+                    "SubnetIdEc2"                 : { "Ref": "SubnetIdEc2" },
+                    "SubnetIdElb"                 : { "Ref": "SubnetIdElb" },
+                    "IamInstanceProfile"          : { "Ref": "IamInstanceProfile" },
+                    "SecurityGroupIdOpEc2"        : { "Ref": "SecurityGroupIdOpEc2" },
+                    "SecurityGroupIdOpNat"        : { "Ref": "SecurityGroupIdOpNat" },
+                    "SecurityGroupIdOdMaintenance": { "Ref": "SecurityGroupIdOdMaintenance" },
+                    "SecurityGroupIdOpStep"       : { "Ref": "SecurityGroupIdOpStep" }
+                }
             }
         },
         "Ec2SecurityGroupIngressOpAdminLdapOpEc2": {
             "Type"      : "AWS::EC2::SecurityGroupIngress",
             "Properties": {
-                "GroupId"                   : { "Ref": "OpAdmin" },
+                "GroupId"                   : { "Fn::GetAtt": [ "OpAdmin", "Outputs.SecurityGroupIdOpAdmin" ] },
                 "IpProtocol"                : "6",
                 "FromPort"                  : "389",
                 "ToPort"                    : "389",
@@ -110,7 +124,7 @@
         "Ec2SecurityGroupIngressOpAdminLdapOpStep": {
             "Type"      : "AWS::EC2::SecurityGroupIngress",
             "Properties": {
-                "GroupId"                   : { "Ref": "OpAdmin" },
+                "GroupId"                   : { "Fn::GetAtt": [ "OpAdmin", "Outputs.SecurityGroupIdOpAdmin" ] },
                 "IpProtocol"                : "6",
                 "FromPort"                  : "389",
                 "ToPort"                    : "389",
@@ -120,21 +134,11 @@
         "Ec2SecurityGroupIngressOpAdminLdapOpNat": {
             "Type"      : "AWS::EC2::SecurityGroupIngress",
             "Properties": {
-                "GroupId"                   : { "Ref": "OpAdmin" },
+                "GroupId"                   : { "Fn::GetAtt": [ "OpAdmin", "Outputs.SecurityGroupIdOpAdmin" ] },
                 "IpProtocol"                : "6",
                 "FromPort"                  : "389",
                 "ToPort"                    : "389",
                 "SourceSecurityGroupId"     : { "Ref": "SecurityGroupIdOpNat" }
-            }
-        },
-        "Ec2SecurityGroupIngressOpAdminHttpsOpAdminLb": {
-            "Type"      : "AWS::EC2::SecurityGroupIngress",
-            "Properties": {
-                "GroupId"                   : { "Ref": "OpAdmin" },
-                "IpProtocol"                : "6",
-                "FromPort"                  : "443",
-                "ToPort"                    : "443",
-                "SourceSecurityGroupId"     : { "Ref": "OpAdminLb" }
             }
         },
         "Ec2SecurityGroupEgressOpEc2LdapOpAdmin": {
@@ -144,7 +148,7 @@
                 "IpProtocol"                : "6",
                 "FromPort"                  : "389",
                 "ToPort"                    : "389",
-                "DestinationSecurityGroupId": { "Ref": "OpAdmin" }
+                "DestinationSecurityGroupId": { "Fn::GetAtt": [ "OpAdmin", "Outputs.SecurityGroupIdOpAdmin" ] }
             }
         },
         "Ec2SecurityGroupEgressOpStepLdapOpAdmin": {
@@ -154,17 +158,7 @@
                 "IpProtocol"                : "6",
                 "FromPort"                  : "389",
                 "ToPort"                    : "389",
-                "DestinationSecurityGroupId": { "Ref": "OpAdmin" }
-            }
-        },
-        "Ec2SecurityGroupEgressOpStepSshOpAdmin": {
-            "Type"      : "AWS::EC2::SecurityGroupEgress",
-            "Properties": {
-                "GroupId"                   : { "Ref": "SecurityGroupIdOpStep" },
-                "IpProtocol"                : "6",
-                "FromPort"                  : "22",
-                "ToPort"                    : "22",
-                "DestinationSecurityGroupId": { "Ref": "OpAdmin" }
+                "DestinationSecurityGroupId": { "Fn::GetAtt": [ "OpAdmin", "Outputs.SecurityGroupIdOpAdmin" ] }
             }
         },
         "Ec2SecurityGroupEgressOpNatLdapOpAdmin": {
@@ -174,65 +168,7 @@
                 "IpProtocol"                : "6",
                 "FromPort"                  : "389",
                 "ToPort"                    : "389",
-                "DestinationSecurityGroupId": { "Ref": "OpAdmin" }
-            }
-        },
-        "Ec2SecurityGroupIngressOpAdminLbHttpsOpAdmin": {
-            "Type"      : "AWS::EC2::SecurityGroupIngress",
-            "Properties": {
-                "GroupId"                   : { "Ref": "OpAdminLb" },
-                "IpProtocol"                : "6",
-                "FromPort"                  : "443",
-                "ToPort"                    : "443",
-                "CidrIp"                    : { "Ref": "SourceCidrIp" }
-            }
-        },
-        "Ec2SecurityGroupEgressOpAdminLbHttpsOpAdmin": {
-            "Type"      : "AWS::EC2::SecurityGroupEgress",
-            "Properties": {
-                "GroupId"                   : { "Ref": "OpAdminLb" },
-                "IpProtocol"                : "6",
-                "FromPort"                  : "443",
-                "ToPort"                    : "443",
-                "DestinationSecurityGroupId": { "Ref": "OpAdmin" }
-            }
-        },
-        "Ec2InstanceOpAdmin": {
-            "Type"      : "AWS::EC2::Instance",
-            "Properties": {
-                "SourceDestCheck"   : "true", 
-                "ImageId"           : { "Ref": "ImageId" },     
-                "InstanceType"      : { "Ref": "InstanceType" },
-                "KeyName"           : { "Ref": "KeyName" },
-                "SecurityGroupIds"  : [ { "Ref": "OpAdmin" }, { "Ref": "SecurityGroupIdOdMaintenance" } ], 
-                "IamInstanceProfile": { "Ref": "IamInstanceProfile" },
-                "SubnetId"          : { "Ref": "SubnetIdEc2" },
-                "PrivateIpAddress"  : { "Ref": "PrivateIpAddress" },
-                "Tags"              : [ { "Key": "Name", "Value": { "Ref": "Name" } } ],   
-                "UserData"          : { "Fn::Base64": { "Fn::Join": [ "\n", [
-                    "#include-once",
-                    "https://raw.github.com/suz-lab/suz-lab-centos-ami/master/share/cloud-init/pattern/suz-lab_op-admin/simple"
-                ] ] } }
-            }   
-        },
-        "ElasticLoadBalancingLoadBalancerOpAdmin": {
-            "Type"      : "AWS::ElasticLoadBalancing::LoadBalancer",
-            "Properties": {
-                "Subnets"       : [ { "Ref": "SubnetIdEc2" } ],
-                "Instances"     : [ { "Ref": "Ec2InstanceOpAdmin" } ],
-                "SecurityGroups": [ { "Ref": "OpAdminLb" } ],
-                "Listeners" : [ {
-                    "LoadBalancerPort": "443",
-                    "InstancePort"    : "443",
-                    "Protocol"        : "TCP"
-                } ],
-                "HealthCheck"    : {
-                    "Target"            : "TCP:443",
-                    "HealthyThreshold"  : "2",
-                    "UnhealthyThreshold": "2",
-                    "Interval"          : "30",
-                    "Timeout"           : "5"
-                }
+                "DestinationSecurityGroupId": { "Fn::GetAtt": [ "OpAdmin", "Outputs.SecurityGroupIdOpAdmin" ] }
             }
         }
     },

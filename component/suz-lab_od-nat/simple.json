@@ -31,6 +31,11 @@
             "Description": "Name", 
             "Type"       : "String"
         }, 
+        "Type": {
+            "Default"    : "simple", 
+            "Description": "Name", 
+            "Type"       : "String"
+        }, 
         "RouteTableId": {
 	    "Default"    : "rtb-xxxxxxxx", 
             "Description": "Route Table ID", 
@@ -71,11 +76,13 @@
                 "SecurityGroupIds"  : [
                     { "Ref": "SecurityGroupIdOpNat" },
                     { "Ref": "SecurityGroupIdOdMaintenance" }
-                ], 
-                "UserData"          : { "Fn::Base64": { "Fn::Join": [ "\n", [
-                    "#include-once",
-                    "https://raw.github.com/suz-lab/suz-lab-centos-ami/master/share/cloud-init/pattern/suz-lab_od-nat/simple"
-                ] ] } }
+                ],
+                "UserData"          : { "Fn::Base64": { "Fn::Join": [ "", [
+                    "#!/bin/sh\n",
+                    "/opt/suz-lab/share/cloud-init/pattern/suz-lab_od-nat/",
+                    { "Ref": "Type" },
+                    " 2>&1 | logger -s -t suz-lab_od-nat"
+                ] ] } } 
             }
         }, 
         "Ec2EIPNat": {

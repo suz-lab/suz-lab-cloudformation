@@ -2,11 +2,15 @@
     "AWSTemplateFormatVersion": "2010-09-09", 
     "Description": "SUZ-LAB Formation 0202 HA-NAT and Firewall", 
     "Mappings": {
-        "AvailabilityZoneMap": {
-            "ap-northeast-1": {
-                "AzA": "ap-northeast-1a", 
-                "AzB": "ap-northeast-1b", 
-                "AzC": "ap-northeast-1c"
+        "ComponetVersionMap": {
+            "OdStep": {
+                "simple" : "0.0.5", 
+                "console": "0.0.1", 
+                "vpn"    : "0.0.1"
+            },
+            "OpFwOption": {
+                "vpc"    : "0.0.1", 
+                "segment": "0.0.1" 
             }
         }
     }, 
@@ -32,7 +36,7 @@
             "Type"       : "String"
         }, 
         "ImageId": {
-            "Default"    : "ami-b1088eb0",
+            "Default"    : "ami-9dac2c9c",
             "Description": "Image ID", 
             "Type"       : "String"
         },
@@ -42,12 +46,12 @@
             "Type"       : "String"
         },
         "OdStepType": {
-            "Default"    : "simple/0.0.5",
+            "Default"    : "simple",
             "Description": "Ondemand Step Type",
             "Type"       : "String"
         },
         "OpFwOptionType": {
-            "Default"    : "vpc/0.0.1",
+            "Default"    : "vpc",
             "Description": "Operational Firewall Option Type", 
             "Type"       : "String"
         }
@@ -122,6 +126,8 @@
                     { "Ref" : "AWS::Region" },
                     ".amazonaws.com/cloudformation/component/suz-lab_od-step/",
                     { "Ref" : "OdStepType" },
+                    "/",
+                    { "Fn::FindInMap": [ "ComponetVersionMap", "OdStep", { "Ref": "OdStepType" } ] }, 
                     ".json"
                 ] ] },
                 "Parameters": {
@@ -200,6 +206,8 @@
                     { "Ref" : "AWS::Region" },
                     ".amazonaws.com/cloudformation/component/suz-lab_op-fw-option/",
                     { "Ref" : "OpFwOptionType" },
+                    "/",
+                    { "Fn::FindInMap": [ "ComponetVersionMap", "OpFwOption", { "Ref": "OpFwOptionType" } ] },  
                     ".json"
                 ] ] },
                 "Parameters": {

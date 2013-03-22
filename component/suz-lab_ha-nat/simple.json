@@ -36,6 +36,11 @@
             "Description": "Name", 
             "Type"       : "String"
         }, 
+        "Type": {
+            "Default"    : "simple", 
+            "Description": "Name", 
+            "Type"       : "String"
+        }, 
         "RouteTableId": {
 	    "Default"    : "rtb-xxxxxxxx", 
             "Description": "Route Table ID", 
@@ -175,12 +180,17 @@
                 "SubnetId"          : { "Ref": "SubnetId1" },
                 "PrivateIpAddress"  : { "Ref": "PrivateIpAddress1" },
                 "Tags"              : [ 
-                    { "Key": "Name"        , "Value": { "Fn::Join": [ "_", [ { "Ref": "Name" }, "1" ] ] } },
-                    { "Key": "suz:ha-group", "Value": { "Ref": "Name" } }
-                ],   
-                "UserData"          : { "Fn::Base64": { "Fn::Join": [ "\n", [
-                    "#include-once",
-                    "https://raw.github.com/suz-lab/suz-lab-centos-ami/master/share/cloud-init/pattern/suz-lab_ha-nat/simple"
+                    { "Key": "Name"        , "Value": { "Fn::Join": [ "_", [ { "Ref": "Name" }, "1" ] ] } }
+                ],
+                "UserData"          : { "Fn::Base64": { "Fn::Join": [ "", [
+                    "#!/bin/sh\n",
+                    "/opt/suz-lab/share/cloud-init/pattern/suz-lab_ha-nat/",
+                    { "Ref": "Type" },
+                    " ",
+                    { "Ref": "PrivateIpAddress2" },
+                    " ",
+                    { "Ref": "RouteTableId" },
+                    " 2>&1 | logger -s -t suz-lab_ha-nat"
                 ] ] } }
             }   
         },
@@ -196,12 +206,18 @@
                 "SubnetId"          : { "Ref": "SubnetId2" },
                 "PrivateIpAddress"  : { "Ref": "PrivateIpAddress2" },
                 "Tags"              : [ 
-                    { "Key": "Name"        , "Value": { "Fn::Join": [ "_", [ { "Ref": "Name" }, "2" ] ] } },
-                    { "Key": "suz:ha-group", "Value": { "Ref": "Name" } }
-                ],   
-                "UserData"          : { "Fn::Base64": { "Fn::Join": [ "\n", [
-                    "#include-once",
-                    "https://raw.github.com/suz-lab/suz-lab-centos-ami/master/share/cloud-init/pattern/suz-lab_ha-nat/simple"
+                    { "Key": "Name"        , "Value": { "Fn::Join": [ "_", [ { "Ref": "Name" }, "2" ] ] } }
+                ],
+                "UserData"          : { "Fn::Base64": { "Fn::Join": [ "", [
+                    "#!/bin/sh\n",
+                    "/opt/suz-lab/share/cloud-init/pattern/suz-lab_ha-nat/",
+                    { "Ref": "Type" },
+                    " ",
+                    { "Ref": "PrivateIpAddress1" },
+                    " ",
+                    { "Ref": "RouteTableId" },
+                    " 2>&1 | logger -s -t suz-lab_ha-nat\n",
+                    "/opt/suz-lab/share/cloud-init/component/suz-lab_failover-routing 2>&1 | logger -s -t suz-lab_failover-routing"
                 ] ] } }
             }   
         },

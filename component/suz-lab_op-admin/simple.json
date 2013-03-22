@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09", 
-    "Description": "SUZ-LAB Formation OnDemand Step Simple", 
+    "Description": "SUZ-LAB Formation Operational Admin Simple", 
     "Mappings": {
         "AvailabilityZoneMap": {
             "ap-northeast-1": {
@@ -198,11 +198,7 @@
                 "IamInstanceProfile": { "Ref": "IamInstanceProfile" },
                 "SubnetId"          : { "Ref": "SubnetIdEc2" },
                 "PrivateIpAddress"  : { "Ref": "PrivateIpAddress" },
-                "Tags"              : [ { "Key": "Name", "Value": { "Ref": "Name" } } ],   
-                "UserData"          : { "Fn::Base64": { "Fn::Join": [ "\n", [
-                    "#include-once",
-                    "https://raw.github.com/suz-lab/suz-lab-centos-ami/master/share/cloud-init/pattern/suz-lab_op-admin/simple"
-                ] ] } }
+                "Tags"              : [ { "Key": "Name", "Value": { "Ref": "Name" } } ]
             }   
         },
         "ElasticLoadBalancingLoadBalancerOpAdmin": {
@@ -242,6 +238,10 @@
 	"CacooImage": {
             "Description": "Cacoo Image",
             "Value"      : "https://cacoo.com/diagrams/XXXXXXXXXXXXXXXX-XXXXX.png"
+        },
+	"SecurityGroupIdOpAdmin": {
+            "Description": "Security Group ID Admin",
+            "Value"      : { "Ref": "OpAdmin" }
         }
     }
 } 
