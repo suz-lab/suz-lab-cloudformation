@@ -102,8 +102,8 @@
             "Properties": {
                 "GroupId"                   : { "Ref": "OpAdmin" },
                 "IpProtocol"                : "6",
-                "FromPort"                  : "80",
-                "ToPort"                    : "80",
+                "FromPort"                  : "443",
+                "ToPort"                    : "443",
                 "SourceSecurityGroupId"     : { "Ref": "OpAdminLb" }
             }
         },
@@ -172,8 +172,8 @@
             "Properties": {
                 "GroupId"                   : { "Ref": "OpAdminLb" },
                 "IpProtocol"                : "6",
-                "FromPort"                  : "80",
-                "ToPort"                    : "80",
+                "FromPort"                  : "443",
+                "ToPort"                    : "443",
                 "CidrIp"                    : { "Ref": "SourceCidrIp" }
             }
         },
@@ -182,8 +182,8 @@
             "Properties": {
                 "GroupId"                   : { "Ref": "OpAdminLb" },
                 "IpProtocol"                : "6",
-                "FromPort"                  : "80",
-                "ToPort"                    : "80",
+                "FromPort"                  : "443",
+                "ToPort"                    : "443",
                 "DestinationSecurityGroupId": { "Ref": "OpAdmin" }
             }
         },
@@ -204,14 +204,9 @@
         "ElasticLoadBalancingLoadBalancerOpAdmin": {
             "Type"      : "AWS::ElasticLoadBalancing::LoadBalancer",
             "Properties": {
-                "Subnets"       : [ { "Ref": "SubnetIdElb" } ],
+                "Subnets"       : [ { "Ref": "SubnetIdEc2" } ],
                 "Instances"     : [ { "Ref": "Ec2InstanceOpAdmin" } ],
-                "SecurityGroups": [ { "Ref": "OpAdminLb" } ],
-                "Listeners"     : [ {
-                    "LoadBalancerPort": "80",
-                    "InstancePort"    : "80",
-                    "Protocol"        : "HTTP"
-                } ]
+                "SecurityGroups": [ { "Ref": "OpAdminLb" } ]
             }
         }
     },

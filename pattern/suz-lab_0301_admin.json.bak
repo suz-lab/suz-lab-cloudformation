@@ -1,15 +1,12 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09", 
-    "Description": "SUZ-LAB Formation 0301 Admin", 
+    "Description": "SUZ-LAB Formation 0302 Admin and Firewall", 
     "Mappings": {
-        "ComponetVersionMap": {
-            "OdStep": {
-                "simple" : "0.0.5", 
-                "console": "0.0.1", 
-                "vpn"    : "0.0.1"
-            },
-            "OpAdmin": {
-                "simple" : "0.0.1"
+        "AvailabilityZoneMap": {
+            "ap-northeast-1": {
+                "AzA": "ap-northeast-1a", 
+                "AzB": "ap-northeast-1b", 
+                "AzC": "ap-northeast-1c"
             }
         }
     }, 
@@ -29,13 +26,18 @@
             "Description": "VPC CIDR IP First 2 Octets", 
             "Type"       : "String"
         },
+        "VpcCidrIpFirst2Octets": {
+            "Default"    : "10.0", 
+            "Description": "VPC CIDR IP First 2 Octets", 
+            "Type"       : "String"
+        },
         "KeyName": {
             "Default"    : "suz-lab_ap-northeast-1", 
             "Description": "Key Name", 
             "Type"       : "String"
         }, 
         "ImageId": {
-            "Default"    : "ami-9dac2c9c",
+            "Default"    : "ami-b1088eb0",
             "Description": "Image ID", 
             "Type"       : "String"
         },
@@ -45,13 +47,18 @@
             "Type"       : "String"
         },
         "OdStepType": {
-            "Default"    : "simple",
+            "Default"    : "simple/0.0.5",
             "Description": "Ondemand Step Type",
             "Type"       : "String"
         },
         "OpAdminType": {
-            "Default"    : "simple",
-            "Description": "Operational Admin Type",
+            "Default"    : "simple/0.0.1",
+            "Description": "Operational Firewall Option Type", 
+            "Type"       : "String"
+        },
+        "OpFwOptionType": {
+            "Default"    : "vpc/0.0.1",
+            "Description": "Operational Firewall Option Type", 
             "Type"       : "String"
         }
     },
@@ -125,8 +132,6 @@
                     { "Ref" : "AWS::Region" },
                     ".amazonaws.com/cloudformation/component/suz-lab_od-step/",
                     { "Ref" : "OdStepType" },
-                    "/",
-                    { "Fn::FindInMap": [ "ComponetVersionMap", "OdStep", { "Ref": "OdStepType" } ] }, 
                     ".json"
                 ] ] },
                 "Parameters": {
@@ -205,25 +210,40 @@
                     { "Ref" : "AWS::Region" },
                     ".amazonaws.com/cloudformation/component/suz-lab_op-admin/",
                     { "Ref" : "OpAdminType" },
-                    "/",
-                    { "Fn::FindInMap": [ "ComponetVersionMap", "OpAdmin", { "Ref": "OpAdminType" } ] }, 
                     ".json"
                 ] ] },
                 "Parameters": {
                     "Name"                        : "op-admin",
-                    "InstanceType"                : "t1.micro",
-                    "KeyName"                     : { "Ref": "KeyName" },
+	            "InstanceType"                : "t1.micro",
                     "ImageId"                     : { "Ref": "ImageId" },
+                    "KeyName"                     : { "Ref": "KeyName" },
                     "SourceCidrIp"                : { "Ref": "SourceCidrIp" },
                     "PrivateIpAddress"            : { "Fn::Join": [ "", [ { "Ref": "VpcCidrIpFirst2Octets" }, ".40.4"  ] ] },
                     "VpcId"                       : { "Fn::GetAtt": [ "VpcBase" , "Outputs.VpcId" ] },
                     "SubnetIdEc2"                 : { "Fn::GetAtt": [ "VpcBase" , "Outputs.SubnetIdProtectedFix1" ] },
                     "SubnetIdElb"                 : { "Fn::GetAtt": [ "VpcBase" , "Outputs.SubnetIdPublicVar1" ] },
-                    "IamInstanceProfile"          : { "Fn::GetAtt": [ "IamBase" , "Outputs.IamInstanceProfileApi" ] },
+	            "IamInstanceProfile"          : { "Fn::GetAtt": [ "IamBase" , "Outputs.IamInstanceProfileApi" ] },
                     "SecurityGroupIdOpEc2"        : { "Fn::GetAtt": [ "OpFwBase", "Outputs.SecurityGroupIdOpEc2" ] },
                     "SecurityGroupIdOpNat"        : { "Fn::GetAtt": [ "OpFwBase", "Outputs.SecurityGroupIdOpNat" ] },
                     "SecurityGroupIdOdMaintenance": { "Fn::GetAtt": [ "OpFwBase", "Outputs.SecurityGroupIdOdMaintenance" ] },
                     "SecurityGroupIdOpStep"       : { "Fn::GetAtt": [ "OdStep"  , "Outputs.SecurityGroupIdOpStep" ] }
+                }
+            }
+        },
+	"OpFwOption": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": { "Fn::Join": [ "", [
+                    "http://",
+                    { "Ref" : "AWS::Region" },
+                    ".cloudformation.suz-lab.com.s3-",
+                    { "Ref" : "AWS::Region" },
+                    ".amazonaws.com/cloudformation/component/suz-lab_op-fw-option/",
+                    { "Ref" : "OpFwOptionType" },
+                    ".json"
+                ] ] },
+                "Parameters": {
+                    "VpcId": { "Fn::GetAtt": [ "VpcBase", "Outputs.VpcId" ] }
                 }
             }
         }
@@ -247,7 +267,7 @@
                 ".amazonaws.com/cloudformation/pattern/suz-lab_0001/0.0.1.json"
             ] ] }
         }, 
-        "CacooImage": {
+	"CacooImage": {
             "Description": "Cacoo Image",
             "Value"      : "https://cacoo.com/diagrams/XXXXXXXXXXXXXXXX-XXXXX.png"
         }
